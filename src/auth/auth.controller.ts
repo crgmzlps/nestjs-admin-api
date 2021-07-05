@@ -5,13 +5,15 @@ import {
   HttpCode,
   NotFoundException,
   Post,
+  Get,
+  Req,
   Res,
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcryptjs';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { JwtService } from '@nestjs/jwt';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -48,6 +50,16 @@ export class AuthController {
     const jwt = await this.jwtService.signAsync({ id: user.id });
 
     response.cookie('jwt', jwt, { httpOnly: true });
-    return { data: 'Successful ' };
+    return user;
+  }
+
+  @Get('user')
+  async user(@Req() request: Request) {
+    const jwt = request.cookies['jwt'];
+    if (!jwt) {
+      throw new BadRequestException('No token found');
+    }
+    const data = await this.jwtService.verifyAsync(jwt);
+    return await this.userService.findOne({ id: data.id });
   }
 }
