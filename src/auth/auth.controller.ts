@@ -1,21 +1,24 @@
 import {
   BadRequestException,
   Body,
+  ClassSerializerInterceptor,
   Controller,
+  Get,
   HttpCode,
   NotFoundException,
   Post,
-  Get,
   Req,
   Res,
+  UseInterceptors,
 } from '@nestjs/common';
-import { UserService } from '../user/user.service';
-import * as bcrypt from 'bcryptjs';
-import { RegisterUserDto } from './dto/register-user.dto';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcryptjs';
 import { Request, Response } from 'express';
+import { UserService } from '../user/user.service';
+import { RegisterUserDto } from './dto/register-user.dto';
 
 @Controller('auth')
+@UseInterceptors(ClassSerializerInterceptor) // remove password field in all user response
 export class AuthController {
   constructor(
     private userService: UserService,
