@@ -9,6 +9,7 @@ import {
   Post,
   Req,
   Res,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -16,6 +17,7 @@ import * as bcrypt from 'bcryptjs';
 import { Request, Response } from 'express';
 import { UserService } from '../user/user.service';
 import { RegisterUserDto } from './dto/register-user.dto';
+import { AuthGuard } from './guards/auth.guard';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor) // remove password field in all user response
@@ -57,12 +59,14 @@ export class AuthController {
   }
 
   @Post('logout')
+  @UseGuards(AuthGuard)
   async logout(@Res({ passthrough: true }) response: Response) {
     response.clearCookie('jwt');
     return { message: 'Success logout' };
   }
 
   @Get('user')
+  @UseGuards(AuthGuard)
   async user(@Req() request: Request) {
     const jwt = request.cookies['jwt'];
     if (!jwt) {
