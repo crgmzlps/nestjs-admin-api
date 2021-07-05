@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { CommonModule } from './common/common.module';
 
 const mysqlCfg: TypeOrmModuleOptions = {
   type: 'mysql',
@@ -17,7 +18,7 @@ const mysqlCfg: TypeOrmModuleOptions = {
 };
 
 @Module({
-  imports: [TypeOrmModule.forRoot(mysqlCfg), UserModule, AuthModule],
+  imports: [TypeOrmModule.forRoot(mysqlCfg), UserModule, AuthModule, CommonModule],
   controllers: [AppController],
   providers: [AppService],
 })
