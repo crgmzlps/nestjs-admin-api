@@ -56,6 +56,12 @@ export class AuthController {
     return user;
   }
 
+  @Post('logout')
+  async logout(@Res({ passthrough: true }) response: Response) {
+    response.clearCookie('jwt');
+    return { message: 'Success logout' };
+  }
+
   @Get('user')
   async user(@Req() request: Request) {
     const jwt = request.cookies['jwt'];
