@@ -14,4 +14,7 @@ export class UserService {
   async create(data): Promise<User> {
     return this.userRepository.save(data);
   }
+  async findOne(condition): Promise<User> {
+    return this.userRepository.findOne(condition);
+  }
 }
