@@ -30,13 +30,17 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() registerUserDto: RegisterUserDto) {
-    const { password, password_confirm } = registerUserDto;
+    const { password, password_confirm, ...data } = registerUserDto;
     if (password !== password_confirm) {
       throw new BadRequestException('Passwords do not match');
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     registerUserDto.password = hashedPassword;
-    return await this.userService.create(registerUserDto);
+    return await this.userService.create({
+      ...data,
+      password: hashedPassword,
+      role: { id: 1 },
+    });
   }
 
   @Post('login')

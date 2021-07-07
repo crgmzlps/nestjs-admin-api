@@ -1,4 +1,4 @@
-import { IsEmail } from 'class-validator';
+import { IsEmail, IsOptional } from 'class-validator';
 
 export class UpdateUserDto {
   first_name?: string;
@@ -6,5 +6,8 @@ export class UpdateUserDto {
   last_name?: string;
 
   @IsEmail()
+  @IsOptional()
   email?: string;
+
+  role_id?: number;
 }

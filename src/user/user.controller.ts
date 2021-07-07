@@ -34,11 +34,11 @@ export class UserController {
   @Post()
   async create(@Body() createUserDto: CreateUserDto): Promise<User> {
     const password = await bcrypt.hash('12345', 10);
+    const { role_id, ...data } = createUserDto;
     const user = await this.userService.create({
-      first_name: createUserDto.first_name,
-      last_name: createUserDto.last_name,
-      email: createUserDto.email,
+      ...data,
       password,
+      role: { id: role_id },
     });
     return user;
   }
@@ -50,7 +50,8 @@ export class UserController {
 
   @Put(':id')
   async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
-    await this.userService.update(id, updateUserDto);
+    const { role_id, ...data } = updateUserDto;
+    await this.userService.update(id, { ...data, role: { id: role_id } });
     return await this.userService.findOne(id);
   }
 
