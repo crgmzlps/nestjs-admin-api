@@ -6,6 +6,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './common/common.module';
 import { RoleModule } from './role/role.module';
+import { PermissionModule } from './permission/permission.module';
 
 const mysqlCfg: TypeOrmModuleOptions = {
   type: 'mysql',
@@ -19,7 +20,7 @@ const mysqlCfg: TypeOrmModuleOptions = {
 };
 
 @Module({
-  imports: [TypeOrmModule.forRoot(mysqlCfg), UserModule, AuthModule, CommonModule, RoleModule],
+  imports: [TypeOrmModule.forRoot(mysqlCfg), UserModule, AuthModule, CommonModule, RoleModule, PermissionModule],
   controllers: [AppController],
   providers: [AppService],
 })
