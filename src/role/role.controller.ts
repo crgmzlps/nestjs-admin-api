@@ -22,22 +22,27 @@ export class RoleController {
   }
 
   @Post()
-  async create(@Body('name') name: string): Promise<Role> {
-    return await this.roleService.create({ name });
+  async create(
+    @Body('name') name: string,
+    @Body('permissions') ids: number[],
+  ): Promise<Role> {
+    const permissions = ids.map((id) => ({ id }));
+    return await this.roleService.create({ name, permissions });
   }
 
   @Get(':id')
   async get(@Param() id: number): Promise<Role> {
-    return await this.roleService.findOne({ id });
+    return await this.roleService.findOne(id);
   }
 
   @Put(':id')
   async update(
     @Param('id') id: number,
     @Body('name') name: string,
+    @Body('permissions') ids: number[],
   ): Promise<Role> {
-    await this.roleService.update(id, { name });
-    return await this.roleService.findOne(id);
+    const permissions = ids.map((id) => ({ id }));
+    return await this.roleService.update(id, { name, permissions });
   }
 
   @Delete(':id')
