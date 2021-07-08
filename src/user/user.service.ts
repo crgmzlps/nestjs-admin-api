@@ -28,8 +28,16 @@ export class UserService extends AbstractService {
   }
 
   async update(id, data) {
-    const { role_id, ...others } = data;
-    await super.update(id, { ...others, role: { id: role_id } });
+    const { role_id, password, ...others } = data;
+    let update = { ...others };
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      update = { ...update, password: hashedPassword };
+    }
+    if (role_id) {
+      update = { ...update, role: { id: role_id } };
+    }
+    await super.update(id, update);
     return this.findOne(id);
   }
 

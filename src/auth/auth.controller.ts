@@ -17,6 +17,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { Request, Response } from 'express';
 import { UserService } from '../user/user.service';
+import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { AuthGuard } from './guards/auth.guard';
 
@@ -26,6 +27,7 @@ export class AuthController {
   constructor(
     private userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly authService: AuthService,
   ) {}
 
   @Post('register')
@@ -73,11 +75,7 @@ export class AuthController {
   @Get('user')
   @UseGuards(AuthGuard)
   async user(@Req() request: Request) {
-    const jwt = request.cookies['jwt'];
-    if (!jwt) {
-      throw new BadRequestException('No token found');
-    }
-    const data = await this.jwtService.verifyAsync(jwt);
-    return await this.userService.findOne({ id: data.id });
+    const id = await this.authService.userId(request);
+    return await this.userService.findOne({ id });
   }
 }
