@@ -15,7 +15,6 @@ import {
 } from '@nestjs/common';
 import { User } from './models/user.entity';
 import { UserService } from './user.service';
-import * as bcrypt from 'bcryptjs';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -33,26 +32,17 @@ export class UserController {
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto): Promise<User> {
-    const password = await bcrypt.hash('12345', 10);
-    const { role_id, ...data } = createUserDto;
-    const user = await this.userService.create({
-      ...data,
-      password,
-      role: { id: role_id },
-    });
-    return user;
+    return await this.userService.create(createUserDto);
   }
 
   @Get(':id')
   async get(@Param() id: number): Promise<User> {
-    return await this.userService.findOne({ id });
+    return await this.userService.findOne(id);
   }
 
   @Put(':id')
   async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
-    const { role_id, ...data } = updateUserDto;
-    await this.userService.update(id, { ...data, role: { id: role_id } });
-    return await this.userService.findOne(id);
+    return await this.userService.update(id, updateUserDto);
   }
 
   @Delete(':id')
