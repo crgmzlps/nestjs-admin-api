@@ -27,13 +27,14 @@ export abstract class AbstractService {
     return entity;
   }
   async update(id: number, data): Promise<any> {
-    return this.repository.update(id, data);
+    await this.repository.update(id, data);
+    return this.findOne(id);
   }
   async remove(id: number) {
     return this.repository.delete(id);
   }
 
-  async paginate(page, relations): Promise<PaginatedResult> {
+  async paginate(page, relations?): Promise<PaginatedResult> {
     page = parseInt(page, 10) || 1;
     const take = 2;
     const [data, total] = await this.repository.findAndCount({
