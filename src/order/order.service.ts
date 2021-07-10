@@ -12,4 +12,22 @@ export class OrderService extends AbstractService {
   ) {
     super(orderRepository);
   }
+
+  async paginate(page, relations) {
+    const { data, meta } = await super.paginate(page, relations);
+    return {
+      data: data.map((order) => {
+        const { first_name, last_name, id, name, email, total, ...others } =
+          order;
+        return {
+          id,
+          name,
+          email,
+          total,
+          ...others,
+        };
+      }),
+      meta,
+    };
+  }
 }
