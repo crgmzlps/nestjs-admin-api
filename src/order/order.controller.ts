@@ -11,6 +11,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { get } from 'http';
 import { Parser } from 'json2csv';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { CreateOrderDto } from './models/dto/create-order.dto';
@@ -27,6 +28,11 @@ export class OrderController {
   @Get()
   async all(@Query('page') page: number) {
     return await this.orderService.paginate(page, ['order_items']);
+  }
+
+  @Get('chart')
+  async chart() {
+    return await this.orderService.chart();
   }
 
   @Get('csv')
