@@ -13,8 +13,8 @@ export class UserService extends AbstractService {
     super(userRepository);
   }
 
-  async findOne(condition): Promise<User> {
-    return super.findOne(condition, ['role']);
+  async findOne(condition, relations = ['role']): Promise<User> {
+    return super.findOne(condition, relations);
   }
 
   async create(data): Promise<User> {

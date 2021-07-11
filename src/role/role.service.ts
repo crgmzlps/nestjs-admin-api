@@ -16,8 +16,8 @@ export class RoleService extends AbstractService {
     return super.all(['permissions']);
   }
 
-  async findOne(condition): Promise<Role> {
-    return super.findOne(condition, ['permissions']);
+  async findOne(condition, relations = ['permissions']): Promise<Role> {
+    return super.findOne(condition, relations);
   }
   async update(id: number, data): Promise<any> {
     const role = await super.findOne(id);

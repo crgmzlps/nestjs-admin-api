@@ -14,6 +14,7 @@ import { Response } from 'express';
 import { get } from 'http';
 import { Parser } from 'json2csv';
 import { AuthGuard } from '../auth/guards/auth.guard';
+import { HasPermission } from '../permission/has-permission.decorator';
 import { CreateOrderDto } from './models/dto/create-order.dto';
 import { OrderItem } from './models/order-item.entity';
 import { Order } from './models/order.entity';
@@ -25,16 +26,19 @@ import { OrderService } from './order.service';
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
+  @HasPermission('orders')
   @Get()
   async all(@Query('page') page: number) {
     return await this.orderService.paginate(page, ['order_items']);
   }
 
+  @HasPermission('orders')
   @Get('chart')
   async chart() {
     return await this.orderService.chart();
   }
 
+  @HasPermission('orders')
   @Get('csv')
   async export(@Res() response: Response): Promise<any> {
     const parser = new Parser({
@@ -68,11 +72,13 @@ export class OrderController {
     response.send(csv);
   }
 
+  @HasPermission('orders')
   @Post()
   async create(@Body() createOrderDto: CreateOrderDto): Promise<Order> {
     return await this.orderService.create(createOrderDto);
   }
 
+  @HasPermission('orders')
   @Get(':id')
   async get(@Param('id') id: number): Promise<Order> {
     return await this.orderService.findOne(id, ['order_items']);

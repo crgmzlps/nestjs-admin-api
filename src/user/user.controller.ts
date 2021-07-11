@@ -22,6 +22,7 @@ import { AuthGuard } from '../auth/guards/auth.guard';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthService } from '../auth/auth.service';
 import { Request } from 'express';
+import { HasPermission } from '../permission/has-permission.decorator';
 
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor) // remove password field in all user response
@@ -32,6 +33,7 @@ export class UserController {
     private readonly authService: AuthService,
   ) {}
 
+  @HasPermission('view_users')
   @Get()
   async all(@Query('page') page: number) {
     return await this.userService.paginate(page);
